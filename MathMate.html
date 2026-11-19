@@ -82,31 +82,39 @@
     <!-- BAGIAN 2: DASHBOARD UTAMA -->
     <!-- ========================================== -->
 
-    <!-- SIDEBAR DESKTOP -->
-    <aside class="hidden md:flex flex-col w-64 bg-[#FFFFFF] border-r border-slate-200 p-6 shadow-xs">
-        <div class="flex items-center gap-3 mb-8">
-            <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="w-11 h-11 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF] shrink-0">
-            <span class="brand-title text-2xl font-extrabold tracking-tight">
-                <span class="text-[#102A56]">Math</span><span class="text-[#00B4B4]">Mate</span>
-            </span>
+    <!-- BACKDROP OVERLAY (TERUTAMA SAAT SIDEBAR MUNCUL DI MOBILE) -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar(false)" class="fixed inset-0 bg-[#102A56]/40 backdrop-blur-2xs z-30 hidden md:hidden"></div>
+
+    <!-- SIDEBAR NAVIGASI SAMPING KIRI (AWALNYA DISEMBUNYIKAN) -->
+    <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 bg-[#FFFFFF] border-r border-slate-200 p-6 shadow-lg md:shadow-xs flex-col transition-all duration-200 hidden">
+        <div class="flex items-center justify-between gap-2 mb-8">
+            <div class="flex items-center gap-3">
+                <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="w-10 h-10 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF] shrink-0">
+                <span class="brand-title text-xl font-extrabold tracking-tight">
+                    <span class="text-[#102A56]">Math</span><span class="text-[#00B4B4]">Mate</span>
+                </span>
+            </div>
+            <button onclick="toggleSidebar(false)" title="Sembunyikan Sidebar" class="text-slate-400 hover:text-[#102A56] p-1.5 rounded-lg hover:bg-slate-100 transition">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
         </div>
 
         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Navigasi Utama</div>
         <div class="space-y-2 mb-6">
-            <button onclick="renderHomePage()" id="nav-btn-home" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100">
+            <button onclick="renderHomePage(); autoCloseSidebarOnMobile();" id="nav-btn-home" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100">
                 <i class="fa-solid fa-house"></i> Home TKA
             </button>
-            <button onclick="renderProgresPage()" id="nav-btn-progres" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+            <button onclick="renderProgresPage(); autoCloseSidebarOnMobile();" id="nav-btn-progres" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
                 <i class="fa-solid fa-chart-line"></i> Progres & Riwayat Skor
             </button>
         </div>
 
         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Jalur Materi TKA</div>
         <div class="space-y-2 mb-8">
-            <button onclick="masukKeMateri('saintek')" id="btn-kat-saintek" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+            <button onclick="masukKeMateri('saintek'); autoCloseSidebarOnMobile();" id="btn-kat-saintek" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
                 <span>TKA Saintek</span> <i class="fa-solid fa-chevron-right text-xs"></i>
             </button>
-            <button onclick="masukKeMateri('soshum')" id="btn-kat-soshum" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+            <button onclick="masukKeMateri('soshum'); autoCloseSidebarOnMobile();" id="btn-kat-soshum" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
                 <span>TKA Soshum</span> <i class="fa-solid fa-chevron-right text-xs"></i>
             </button>
         </div>
@@ -129,16 +137,20 @@
     </aside>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    <div class="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
         
-        <header class="bg-[#FFFFFF] border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-xs">
-            <div class="flex items-center gap-3">
-                <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="md:hidden w-9 h-9 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF]">
-                <h1 id="header-title" class="brand-title text-xl font-extrabold text-[#102A56]">Home - MathMate TKA</h1>
+        <header class="bg-[#FFFFFF] border-b border-slate-200 px-6 py-4 flex items-center justify-between gap-4 shadow-xs">
+            <div class="flex items-center gap-3 min-w-0">
+                <!-- TOMBOL BUKA/TUTUP NAVIGASI SAMPING KIRI -->
+                <button onclick="toggleSidebar()" id="sidebar-toggle-btn" title="Tampilkan / Sembunyikan Navigasi Kiri" class="w-10 h-10 rounded-xl border border-slate-200 hover:border-[#00B4B4] bg-slate-50 hover:bg-teal-50 text-[#102A56] flex items-center justify-center transition shrink-0">
+                    <i id="sidebar-toggle-icon" class="fa-solid fa-bars text-base"></i>
+                </button>
+                <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="w-9 h-9 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF] shrink-0">
+                <h1 id="header-title" class="brand-title text-lg sm:text-xl font-extrabold text-[#102A56] truncate">Home - MathMate TKA</h1>
             </div>
-            <div class="flex items-center gap-2">
-                <button onclick="renderHomePage()" class="md:hidden text-xs font-bold bg-slate-100 text-[#102A56] px-3 py-1.5 rounded-xl">Home</button>
-                <div class="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-500">
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="renderHomePage()" class="text-xs font-bold bg-slate-100 hover:bg-teal-50 text-[#102A56] px-3 py-2 rounded-xl transition">Home</button>
+                <div class="hidden lg:flex items-center gap-2 text-xs font-bold text-slate-500 ml-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#00B4B4]"></span>
                     <span>Persiapan TKA SMA</span>
                 </div>
@@ -316,6 +328,40 @@
 
         let currentKategori = 'saintek';
         let currentBabIndex = 0;
+        let isSidebarOpen = false;
+
+        // ==========================================
+        // TOGGLE NAVIGASI SAMPING KIRI (MUNCUL / SEMBUNYI)
+        // ==========================================
+        function toggleSidebar(forceState = null) {
+            const sidebar = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleIcon = document.getElementById('sidebar-toggle-icon');
+
+            if (typeof forceState === 'boolean') {
+                isSidebarOpen = forceState;
+            } else {
+                isSidebarOpen = !isSidebarOpen;
+            }
+
+            if (isSidebarOpen) {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('flex');
+                backdrop.classList.remove('hidden');
+                toggleIcon.className = "fa-solid fa-indent text-base";
+            } else {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('flex');
+                backdrop.classList.add('hidden');
+                toggleIcon.className = "fa-solid fa-bars text-base";
+            }
+        }
+
+        function autoCloseSidebarOnMobile() {
+            if (window.innerWidth < 768) {
+                toggleSidebar(false);
+            }
+        }
 
         function getRiwayatSkorUser() {
             const user = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{}');
@@ -370,7 +416,7 @@
                 document.getElementById('user-display-name').innerText = `Halo, ${user.nama}`;
                 document.getElementById('user-display-class').innerText = `TKA ${user.kelas.toUpperCase()}`;
                 
-                // Selalu tampilkan halaman Home dulu setelah login/register
+                toggleSidebar(false);
                 renderHomePage();
             } else {
                 document.getElementById('auth-view').classList.remove('hidden');
@@ -502,14 +548,12 @@
 
             const html = `
                 <div class="space-y-6 max-w-5xl mx-auto">
-                    <!-- BANNER HOME -->
                     <div class="bg-gradient-to-r from-[#102A56] to-slate-800 text-[#FFFFFF] p-7 rounded-3xl shadow-lg">
                         <span class="inline-block bg-[#00B4B4] text-[#FFFFFF] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3">Pusat Belajar TKA SMA</span>
                         <h2 class="brand-title text-2xl md:text-3xl font-extrabold mb-2">Selamat Datang, ${user.nama}</h2>
                         <p class="text-slate-300 text-sm max-w-2xl">Pilih jenis materi TKA yang ingin kamu pelajari terlebih dahulu sebelum masuk ke daftar topik dan sesi latihan soal.</p>
                     </div>
 
-                    <!-- RINGKASAN CEPAT PROGRES -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
                             <div>
@@ -527,7 +571,6 @@
                         </div>
                     </div>
 
-                    <!-- PILIHAN JENIS TKA -->
                     <div class="space-y-3">
                         <h3 class="font-extrabold text-lg text-[#102A56]">Pilih Jenis Materi TKA</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
