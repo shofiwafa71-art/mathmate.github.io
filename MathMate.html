@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathMate - Platform Persiapan TKA SMA</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts: Poppins & Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Nunito', 'Poppins', sans-serif; }
+        .brand-title { font-family: 'Poppins', 'Nunito', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#FFFFFF] text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- ========================================== -->
+    <!-- BAGIAN 1: HALAMAN AUTH (LOGIN & REGISTER) -->
+    <!-- ========================================== -->
+    <div id="auth-view" class="fixed inset-0 bg-[#102A56]/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#FFFFFF] w-full max-w-md p-8 rounded-3xl shadow-2xl border border-slate-100">
+            
+            <div class="text-center mb-6">
+                <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="w-16 h-16 object-contain mx-auto mb-3 rounded-2xl border border-slate-200 p-1 bg-[#FFFFFF]">
+                <h2 id="auth-title" class="brand-title text-2xl font-extrabold">
+                    <span class="text-[#102A56]">Math</span><span class="text-[#00B4B4]">Mate</span>
+                    <span class="text-[#102A56]">TKA SMA</span>
+                </h2>
+                <p id="auth-subtitle" class="text-sm text-slate-500 mt-1">Platform persiapan intensif Tes Kemampuan Akademik.</p>
+            </div>
+
+            <!-- FORM LOGIN -->
+            <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Email</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold" placeholder="siswa@sma.ac.id">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full bg-[#102A56] hover:bg-[#0d2246] text-[#FFFFFF] font-bold py-3.5 rounded-2xl transition shadow-md">Masuk ke Home</button>
+                <p class="text-center text-xs text-slate-500 mt-4">
+                    Belum punya akun? <button type="button" onclick="toggleAuthMode('register')" class="text-[#00B4B4] font-bold hover:underline">Daftar Akun Baru</button>
+                </p>
+            </form>
+
+            <!-- FORM REGISTER -->
+            <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Lengkap</label>
+                    <input type="text" id="reg-nama" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold" placeholder="Citra Lestari">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Target Fokus TKA</label>
+                    <select id="reg-kelas" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold bg-[#FFFFFF]">
+                        <option value="saintek">TKA Saintek</option>
+                        <option value="soshum">TKA Soshum</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Email</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold" placeholder="siswa@sma.ac.id">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password</label>
+                    <input type="password" id="reg-password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] text-sm font-semibold" placeholder="Buat password rahasia">
+                </div>
+                <button type="submit" class="w-full bg-[#102A56] hover:bg-[#0d2246] text-[#FFFFFF] font-bold py-3.5 rounded-2xl transition shadow-md">Daftar Sekarang</button>
+                <p class="text-center text-xs text-slate-500 mt-4">
+                    Sudah punya akun? <button type="button" onclick="toggleAuthMode('login')" class="text-[#00B4B4] font-bold hover:underline">Masuk</button>
+                </p>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BAGIAN 2: DASHBOARD UTAMA -->
+    <!-- ========================================== -->
+
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="hidden md:flex flex-col w-64 bg-[#FFFFFF] border-r border-slate-200 p-6 shadow-xs">
+        <div class="flex items-center gap-3 mb-8">
+            <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="w-11 h-11 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF] shrink-0">
+            <span class="brand-title text-2xl font-extrabold tracking-tight">
+                <span class="text-[#102A56]">Math</span><span class="text-[#00B4B4]">Mate</span>
+            </span>
+        </div>
+
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Navigasi Utama</div>
+        <div class="space-y-2 mb-6">
+            <button onclick="renderHomePage()" id="nav-btn-home" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100">
+                <i class="fa-solid fa-house"></i> Home TKA
+            </button>
+            <button onclick="renderProgresPage()" id="nav-btn-progres" class="nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+                <i class="fa-solid fa-chart-line"></i> Progres & Riwayat Skor
+            </button>
+        </div>
+
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Jalur Materi TKA</div>
+        <div class="space-y-2 mb-8">
+            <button onclick="masukKeMateri('saintek')" id="btn-kat-saintek" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+                <span>TKA Saintek</span> <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+            <button onclick="masukKeMateri('soshum')" id="btn-kat-soshum" class="kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50">
+                <span>TKA Soshum</span> <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+
+        <!-- PROFIL & TOMBOL CEK AKUN -->
+        <div class="mt-auto bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div>
+                <p id="user-display-name" class="text-xs font-extrabold text-[#102A56]">Halo, Siswa!</p>
+                <p id="user-display-class" class="text-[11px] text-slate-500">TKA SMA</p>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="openAccountModal()" title="Cek & Edit Akun" class="text-[#00B4B4] hover:text-[#102A56] p-2 transition">
+                    <i class="fa-solid fa-user-gear"></i>
+                </button>
+                <button onclick="handleLogout()" title="Keluar Akun" class="text-red-500 hover:text-red-700 p-2 transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <header class="bg-[#FFFFFF] border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-3">
+                <img src="Logo Mathmate.jpg" alt="Logo MathMate" class="md:hidden w-9 h-9 object-contain rounded-xl border border-slate-200 p-0.5 bg-[#FFFFFF]">
+                <h1 id="header-title" class="brand-title text-xl font-extrabold text-[#102A56]">Home - MathMate TKA</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="renderHomePage()" class="md:hidden text-xs font-bold bg-slate-100 text-[#102A56] px-3 py-1.5 rounded-xl">Home</button>
+                <div class="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-500">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#00B4B4]"></span>
+                    <span>Persiapan TKA SMA</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- PANGGUNG UTAMA TEMPAT KONTEN DIRENDER OTOMATIS -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50" id="content-area-wrapper">
+            <!-- Konten dinamis masuk ke sini -->
+        </main>
+    </div>
+
+    <!-- MODAL POPUP: CEK & EDIT AKUN -->
+    <div id="account-modal" class="fixed inset-0 bg-[#102A56]/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#FFFFFF] w-full max-w-md p-6 rounded-3xl shadow-xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-extrabold text-lg text-[#102A56]">Pengaturan Akun Siswa</h3>
+                <button onclick="closeAccountModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div id="account-view-mode" class="space-y-3 text-sm">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">Nama Lengkap</span>
+                        <span id="modal-nama-text" class="font-extrabold text-slate-800">-</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">Email Terdaftar</span>
+                        <span id="modal-email-text" class="font-semibold text-slate-700">-</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">Target Fokus TKA</span>
+                        <span id="modal-kelas-text" class="font-semibold text-[#00B4B4]">-</span>
+                    </div>
+                </div>
+                <button onclick="switchToEditMode()" class="w-full bg-[#00B4B4] hover:bg-teal-600 text-[#FFFFFF] font-bold py-2.5 rounded-xl transition text-sm shadow-sm">Edit Profil</button>
+            </div>
+
+            <form id="account-edit-mode" onsubmit="handleSaveEditProfile(event)" class="space-y-3 hidden text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Lengkap</label>
+                    <input type="text" id="edit-nama" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Target Fokus TKA</label>
+                    <select id="edit-kelas" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00B4B4] font-semibold bg-[#FFFFFF]">
+                        <option value="saintek">TKA Saintek</option>
+                        <option value="soshum">TKA Soshum</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="flex-1 bg-[#102A56] hover:bg-[#0d2246] text-[#FFFFFF] font-bold py-2.5 rounded-xl transition text-sm">Simpan</button>
+                    <button type="button" onclick="cancelEditMode()" class="px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition text-sm">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPT DATABASE & LOGIKA TKA SMA -->
+    <!-- ========================================== -->
+    <script>
+        const databaseTKA = {
+            saintek: {
+                title: "TKA Saintek",
+                subtitle: "Matematika IPA & Analisis Lanjut",
+                deskripsiSingkat: "Fokus pada kalkulus, turunan, nilai stasioner, vektor, dan matriks untuk pendalaman konsep sains dan teknologi.",
+                babList: [
+                    { 
+                        id: "kalkulus", 
+                        namaBab: "Kalkulus: Limit & Turunan Lanjut", 
+                        deskripsi: "Pendalaman limit tak hingga, turunan fungsi aljabar, trigonometri, dan titik stasioner.",
+                        materiList: [
+                            { judul: "Konsep Dasar & Aturan Rantai Turunan", desc: "Menurunkan fungsi komposisi dan trigonometri tingkat lanjut.", durasi: "15 menit baca" },
+                            { judul: "Aplikasi Nilai Maksimum & Minimum", desc: "Menyelesaikan masalah optimasi dan garis singgung kurva.", durasi: "20 menit baca" }
+                        ],
+                        sesiLatihan: [
+                            {
+                                namaSesi: "Sesi 1: Dasar Turunan Aljabar",
+                                soal: "Turunan pertama dari f(x) = 3x³ - 6x² + 5x - 8 adalah...",
+                                opsi: ["9x² - 12x + 5", "9x² - 6x + 5", "3x² - 12x", "9x² + 12x - 5"],
+                                jawabanBenar: 0
+                            },
+                            {
+                                namaSesi: "Sesi 2: Aplikasi Nilai Stasioner",
+                                soal: "Titik stasioner dari fungsi f(x) = x³ - 3x tercapai pada nilai x = ...",
+                                opsi: ["x = 1 dan x = -1", "x = 0 dan x = 2", "x = 3 dan x = -3", "x = 1 dan x = 3"],
+                                jawabanBenar: 0
+                            },
+                            {
+                                namaSesi: "Tryout Evaluasi Kalkulus",
+                                soal: "Nilai minimum dari fungsi kuadrat f(x) = x² - 4x + 3 adalah...",
+                                opsi: ["-1", "0", "3", "-4"],
+                                jawabanBenar: 0
+                            }
+                        ]
+                    },
+                    { 
+                        id: "vektor_matriks", 
+                        namaBab: "Aljabar Vektor & Transformasi Matriks", 
+                        deskripsi: "Operasi dot/cross product vektor 3D serta determinan dan invers matriks.",
+                        materiList: [
+                            { judul: "Proyeksi Skalar & Vektor Ortogonal", desc: "Menghitung panjang proyeksi vektor pada ruang dimensi tiga.", durasi: "18 menit baca" }
+                        ],
+                        sesiLatihan: [
+                            {
+                                namaSesi: "Sesi 1: Dot Product Vektor",
+                                soal: "Jika vektor a = (2, -1, 3) dan b = (4, 2, -1), maka hasil kali skalar a · b adalah...",
+                                opsi: ["3", "5", "7", "9"],
+                                jawabanBenar: 0
+                            },
+                            {
+                                namaSesi: "Tryout Evaluasi Matriks",
+                                soal: "Determinan dari matriks [[2, 1], [5, 3]] adalah...",
+                                opsi: ["1", "2", "3", "4"],
+                                jawabanBenar: 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            soshum: {
+                title: "TKA Soshum",
+                subtitle: "Matematika Dasar & Penalaran Data",
+                deskripsiSingkat: "Fokus pada statistika, penyebaran data, peluang kombinatorik, dan program linear untuk analisis sosial-ekonomi.",
+                babList: [
+                    { 
+                        id: "statistika_peluang", 
+                        namaBab: "Statistika Inferensial & Peluang Kejadian", 
+                        deskripsi: "Analisis ukuran penyebaran data kelompok, kaidah pencacahan, dan peluang majemuk.",
+                        materiList: [
+                            { judul: "Simpangan Rata-Rata, Ragam & Simpangan Baku", desc: "Mengukur sebaran data tunggal maupun data berkelompok.", durasi: "15 menit baca" },
+                            { judul: "Kaidah Pencacahan: Permutasi & Kombinasi", desc: "Membedakan penyusunan berurutan dan pemilihan acak.", durasi: "18 menit baca" }
+                        ],
+                        sesiLatihan: [
+                            {
+                                namaSesi: "Sesi 1: Pemusatan & Sebaran Data",
+                                soal: "Simpangan baku dari sekumpulan data tunggal: 2, 3, 4, 5, 6 adalah...",
+                                opsi: ["√2", "2", "3", "√5"],
+                                jawabanBenar: 0
+                            },
+                            {
+                                namaSesi: "Sesi 2: Kombinatorik & Peluang",
+                                soal: "Dari 7 orang pengurus OSIS akan dipilih 3 orang sebagai ketua, sekretaris, dan bendahara. Banyak susunan yang mungkin adalah...",
+                                opsi: ["210", "35", "42", "120"],
+                                jawabanBenar: 0
+                            },
+                            {
+                                namaSesi: "Tryout Evaluasi Soshum",
+                                soal: "Rata-rata nilai 10 siswa adalah 75. Jika ditambah 5 siswa baru, rata-ratanya menjadi 78. Rata-rata nilai 5 siswa baru tersebut adalah...",
+                                opsi: ["84", "82", "80", "85"],
+                                jawabanBenar: 0
+                            }
+                        ]
+                    },
+                    { 
+                        id: "program_linear", 
+                        namaBab: "Sistem Pertidaksamaan & Program Linear", 
+                        deskripsi: "Menentukan daerah himpunan penyelesaian dan nilai optimum fungsi objektif.",
+                        materiList: [
+                            { judul: "Model Matematika & Uji Titik Pojok", desc: "Mengubah soal cerita ekonomi menjadi pertidaksamaan linear.", durasi: "20 menit baca" }
+                        ],
+                        sesiLatihan: [
+                            {
+                                namaSesi: "Sesi 1: Nilai Optimum Fungsi Tujuan",
+                                soal: "Nilai maksimum dari f(x, y) = 4x + 5y yang memenuhi x + y ≤ 8, x + 2y ≤ 12, x ≥ 0, y ≥ 0 adalah...",
+                                opsi: ["36", "32", "40", "30"],
+                                jawabanBenar: 0
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentKategori = 'saintek';
+        let currentBabIndex = 0;
+
+        function getRiwayatSkorUser() {
+            const user = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{}');
+            if (!user.email) return [];
+            const key = `mathmate_skor_${user.email}`;
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+
+        function simpanSkorKeRiwayat(namaSesi, skor, totalSoal) {
+            const user = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{}');
+            if (!user.email) return;
+            const key = `mathmate_skor_${user.email}`;
+            let riwayat = JSON.parse(localStorage.getItem(key) || '[]');
+            
+            const dataBaru = {
+                tanggal: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                bab: namaSesi,
+                skor: skor,
+                total: totalSoal
+            };
+            
+            riwayat.unshift(dataBaru);
+            localStorage.setItem(key, JSON.stringify(riwayat));
+        }
+
+        function setActiveSidebar(mode, kategoriKey = null) {
+            document.querySelectorAll('.nav-main-btn').forEach(btn => {
+                btn.className = "nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50";
+            });
+            document.querySelectorAll('.kat-btn').forEach(btn => {
+                btn.className = "kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-slate-600 hover:bg-slate-50";
+            });
+
+            if (mode === 'home') {
+                document.getElementById('nav-btn-home').className = "nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100";
+            } else if (mode === 'progres') {
+                document.getElementById('nav-btn-progres').className = "nav-main-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100";
+            } else if (mode === 'materi' && kategoriKey) {
+                const activeKat = document.getElementById(`btn-kat-${kategoriKey}`);
+                if (activeKat) {
+                    activeKat.className = "kat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition text-[#102A56] bg-teal-50 border border-teal-100";
+                }
+            }
+        }
+
+        function checkAuthStatus() {
+            const loggedInUser = localStorage.getItem('mathmate_logged_in');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                document.getElementById('auth-view').classList.add('hidden');
+                
+                document.getElementById('user-display-name').innerText = `Halo, ${user.nama}`;
+                document.getElementById('user-display-class').innerText = `TKA ${user.kelas.toUpperCase()}`;
+                
+                // Selalu tampilkan halaman Home dulu setelah login/register
+                renderHomePage();
+            } else {
+                document.getElementById('auth-view').classList.remove('hidden');
+            }
+        }
+
+        function toggleAuthMode(mode) {
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            const authTitle = document.getElementById('auth-title');
+            const authSubtitle = document.getElementById('auth-subtitle');
+
+            if (mode === 'register') {
+                formLogin.classList.add('hidden');
+                formRegister.classList.remove('hidden');
+                authTitle.innerHTML = `<span class="text-[#102A56]">Daftar</span> <span class="text-[#00B4B4]">MathMate</span>`;
+                authSubtitle.innerText = "Isi identitas untuk mulai mencatat progres belajarmu.";
+            } else {
+                formRegister.classList.add('hidden');
+                formLogin.classList.remove('hidden');
+                authTitle.innerHTML = `<span class="text-[#102A56]">Math</span><span class="text-[#00B4B4]">Mate</span> <span class="text-[#102A56]">TKA SMA</span>`;
+                authSubtitle.innerText = "Platform persiapan intensif Tes Kemampuan Akademik.";
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const nama = document.getElementById('reg-nama').value;
+            const kelas = document.getElementById('reg-kelas').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            const userData = { nama, kelas, email, password };
+
+            localStorage.setItem(`mathmate_user_${email}`, JSON.stringify(userData));
+            localStorage.setItem('mathmate_logged_in', JSON.stringify(userData));
+
+            alert(`Pendaftaran berhasil! Selamat datang di Home MathMate, ${nama}.`);
+            checkAuthStatus();
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const savedUserStr = localStorage.getItem(`mathmate_user_${email}`);
+
+            if (savedUserStr) {
+                const savedUser = JSON.parse(savedUserStr);
+                if (savedUser.password === password) {
+                    localStorage.setItem('mathmate_logged_in', JSON.stringify(savedUser));
+                    alert(`Berhasil masuk! Selamat datang kembali, ${savedUser.nama}.`);
+                    checkAuthStatus();
+                } else {
+                    alert('Password salah! Periksa kembali.');
+                }
+            } else {
+                alert('Email belum terdaftar! Silakan daftar akun baru.');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('mathmate_logged_in');
+            alert('Kamu telah keluar dari akun.');
+            checkAuthStatus();
+        }
+
+        function openAccountModal() {
+            const loggedInUser = localStorage.getItem('mathmate_logged_in');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                document.getElementById('modal-nama-text').innerText = user.nama;
+                document.getElementById('modal-email-text').innerText = user.email;
+                document.getElementById('modal-kelas-text').innerText = `TKA ${user.kelas.toUpperCase()}`;
+                
+                document.getElementById('account-view-mode').classList.remove('hidden');
+                document.getElementById('account-edit-mode').classList.add('hidden');
+                document.getElementById('account-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeAccountModal() {
+            document.getElementById('account-modal').classList.add('hidden');
+        }
+
+        function switchToEditMode() {
+            const loggedInUser = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{}');
+            document.getElementById('edit-nama').value = loggedInUser.nama || '';
+            document.getElementById('edit-kelas').value = databaseTKA[loggedInUser.kelas] ? loggedInUser.kelas : 'saintek';
+
+            document.getElementById('account-view-mode').classList.add('hidden');
+            document.getElementById('account-edit-mode').classList.remove('hidden');
+        }
+
+        function cancelEditMode() {
+            document.getElementById('account-edit-mode').classList.add('hidden');
+            document.getElementById('account-view-mode').classList.remove('hidden');
+        }
+
+        function handleSaveEditProfile(event) {
+            event.preventDefault();
+            const namaBaru = document.getElementById('edit-nama').value;
+            const kelasBaru = document.getElementById('edit-kelas').value;
+
+            let loggedInUser = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{}');
+            loggedInUser.nama = namaBaru;
+            loggedInUser.kelas = kelasBaru;
+
+            localStorage.setItem('mathmate_logged_in', JSON.stringify(loggedInUser));
+            localStorage.setItem(`mathmate_user_${loggedInUser.email}`, JSON.stringify(loggedInUser));
+
+            alert('Profil berhasil diperbarui!');
+            openAccountModal();
+            document.getElementById('user-display-name').innerText = `Halo, ${loggedInUser.nama}`;
+            document.getElementById('user-display-class').innerText = `TKA ${loggedInUser.kelas.toUpperCase()}`;
+        }
+
+        // ==========================================
+        // HALAMAN HOME: PILIH JENIS TKA DULU
+        // ==========================================
+        function renderHomePage() {
+            const user = JSON.parse(localStorage.getItem('mathmate_logged_in') || '{"nama":"Siswa","kelas":"saintek"}');
+            const riwayat = getRiwayatSkorUser();
+            const rataRata = riwayat.length > 0 ? Math.round(riwayat.reduce((a, b) => a + (b.skor / b.total * 100), 0) / riwayat.length) : 0;
+
+            setActiveSidebar('home');
+            document.getElementById('header-title').innerText = "Home - Pilih Jalur TKA";
+
+            const html = `
+                <div class="space-y-6 max-w-5xl mx-auto">
+                    <!-- BANNER HOME -->
+                    <div class="bg-gradient-to-r from-[#102A56] to-slate-800 text-[#FFFFFF] p-7 rounded-3xl shadow-lg">
+                        <span class="inline-block bg-[#00B4B4] text-[#FFFFFF] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-3">Pusat Belajar TKA SMA</span>
+                        <h2 class="brand-title text-2xl md:text-3xl font-extrabold mb-2">Selamat Datang, ${user.nama}</h2>
+                        <p class="text-slate-300 text-sm max-w-2xl">Pilih jenis materi TKA yang ingin kamu pelajari terlebih dahulu sebelum masuk ke daftar topik dan sesi latihan soal.</p>
+                    </div>
+
+                    <!-- RINGKASAN CEPAT PROGRES -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 font-bold uppercase block">Sesi Latihan Selesai</span>
+                                <span class="text-2xl font-extrabold text-[#102A56]">${riwayat.length} Sesi</span>
+                            </div>
+                            <button onclick="renderProgresPage()" class="text-xs font-bold text-[#00B4B4] hover:underline">Lihat Riwayat</button>
+                        </div>
+                        <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 font-bold uppercase block">Rata-Rata Skor</span>
+                                <span class="text-2xl font-extrabold text-[#00B4B4]">${rataRata}%</span>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-500">Target Utama: ${user.kelas.toUpperCase()}</span>
+                        </div>
+                    </div>
+
+                    <!-- PILIHAN JENIS TKA -->
+                    <div class="space-y-3">
+                        <h3 class="font-extrabold text-lg text-[#102A56]">Pilih Jenis Materi TKA</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- KARTU TKA SAINTEK -->
+                            <div onclick="masukKeMateri('saintek')" class="bg-[#FFFFFF] p-7 rounded-3xl border-2 border-slate-200 hover:border-[#00B4B4] cursor-pointer transition flex flex-col justify-between shadow-xs group">
+                                <div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="bg-[#102A56] text-[#FFFFFF] text-xs font-extrabold px-3 py-1 rounded-full">Jalur 01</span>
+                                        <span class="text-xs font-bold text-[#00B4B4]">${databaseTKA.saintek.babList.length} Topik Tersedia</span>
+                                    </div>
+                                    <h4 class="brand-title text-xl font-extrabold text-[#102A56] group-hover:text-[#00B4B4] transition mb-1">${databaseTKA.saintek.title}</h4>
+                                    <p class="text-xs font-bold text-[#00B4B4] uppercase tracking-wide mb-3">${databaseTKA.saintek.subtitle}</p>
+                                    <p class="text-sm text-slate-500 leading-relaxed mb-6">${databaseTKA.saintek.deskripsiSingkat}</p>
+                                </div>
+                                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                    <span class="text-sm font-extrabold text-[#102A56]">Masuk ke Materi Saintek</span>
+                                    <span class="w-9 h-9 rounded-xl bg-teal-50 text-[#00B4B4] flex items-center justify-center group-hover:bg-[#00B4B4] group-hover:text-[#FFFFFF] transition">
+                                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- KARTU TKA SOSHUM -->
+                            <div onclick="masukKeMateri('soshum')" class="bg-[#FFFFFF] p-7 rounded-3xl border-2 border-slate-200 hover:border-[#00B4B4] cursor-pointer transition flex flex-col justify-between shadow-xs group">
+                                <div>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="bg-[#102A56] text-[#FFFFFF] text-xs font-extrabold px-3 py-1 rounded-full">Jalur 02</span>
+                                        <span class="text-xs font-bold text-[#00B4B4]">${databaseTKA.soshum.babList.length} Topik Tersedia</span>
+                                    </div>
+                                    <h4 class="brand-title text-xl font-extrabold text-[#102A56] group-hover:text-[#00B4B4] transition mb-1">${databaseTKA.soshum.title}</h4>
+                                    <p class="text-xs font-bold text-[#00B4B4] uppercase tracking-wide mb-3">${databaseTKA.soshum.subtitle}</p>
+                                    <p class="text-sm text-slate-500 leading-relaxed mb-6">${databaseTKA.soshum.deskripsiSingkat}</p>
+                                </div>
+                                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                    <span class="text-sm font-extrabold text-[#102A56]">Masuk ke Materi Soshum</span>
+                                    <span class="w-9 h-9 rounded-xl bg-teal-50 text-[#00B4B4] flex items-center justify-center group-hover:bg-[#00B4B4] group-hover:text-[#FFFFFF] transition">
+                                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content-area-wrapper').innerHTML = html;
+        }
+
+        // ==========================================
+        // HALAMAN PILIHAN MATERI SETELAH MEMILIH JENIS TKA
+        // ==========================================
+        function masukKeMateri(kategoriKey) {
+            currentKategori = kategoriKey;
+            currentBabIndex = 0;
+
+            setActiveSidebar('materi', kategoriKey);
+            document.getElementById('header-title').innerText = `Materi - ${databaseTKA[kategoriKey].title}`;
+            renderContent();
+        }
+
+        function renderContent() {
+            const dataKat = databaseTKA[currentKategori];
+
+            let htmlContent = `
+                <div class="space-y-6 max-w-5xl mx-auto">
+                    <div class="flex items-center justify-between">
+                        <button onclick="renderHomePage()" class="text-[#00B4B4] font-bold text-sm flex items-center hover:underline">
+                            <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Home (Pilih Jenis TKA)
+                        </button>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-[#102A56] to-slate-800 text-[#FFFFFF] p-6 rounded-3xl shadow-lg">
+                        <span class="text-xs font-extrabold bg-[#00B4B4] text-[#FFFFFF] px-3 py-1 rounded-full uppercase">Jalur Aktif</span>
+                        <h2 class="text-2xl font-extrabold mt-2 mb-1">${dataKat.title} — ${dataKat.subtitle}</h2>
+                        <p class="text-slate-300 text-sm">Pilih topik materi spesifik di bawah ini untuk mempelajari konsep dan mengerjakan sesi latihan soal.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            `;
+
+            dataKat.babList.forEach((bab, index) => {
+                htmlContent += `
+                    <div onclick="selectBab(${index})" class="bg-[#FFFFFF] p-6 rounded-3xl border border-slate-200 hover:border-[#00B4B4] cursor-pointer transition flex flex-col justify-between shadow-xs">
+                        <div>
+                            <span class="bg-teal-50 text-[#00B4B4] text-xs font-bold px-3 py-1 rounded-full">Topik ${index + 1}</span>
+                            <h3 class="text-lg font-extrabold text-[#102A56] mt-3 mb-1">${bab.namaBab}</h3>
+                            <p class="text-sm text-slate-500">${bab.deskripsi}</p>
+                        </div>
+                        <div class="mt-4 flex items-center text-[#00B4B4] font-bold text-sm">
+                            <span>Buka Topik</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                `;
+            });
+
+            htmlContent += `</div></div>`;
+            document.getElementById('content-area-wrapper').innerHTML = htmlContent;
+        }
+
+        function renderProgresPage() {
+            const riwayat = getRiwayatSkorUser();
+            setActiveSidebar('progres');
+            document.getElementById('header-title').innerText = "Progres & Riwayat Skor";
+            
+            let html = `
+                <div class="space-y-6 max-w-4xl mx-auto">
+                    <div class="bg-gradient-to-r from-[#102A56] to-slate-800 text-[#FFFFFF] p-6 rounded-3xl shadow-lg flex flex-wrap justify-between items-center gap-3">
+                        <div>
+                            <h2 class="text-2xl font-extrabold mb-1">Progres Belajar & Riwayat Skor</h2>
+                            <p class="text-slate-300 text-sm">Rekap performa latihan soal dan tryout TKA kamu.</p>
+                        </div>
+                        <button onclick="renderHomePage()" class="bg-[#00B4B4] hover:bg-teal-600 text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-sm transition">Kembali ke Home</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs">
+                            <span class="text-xs text-slate-400 font-bold uppercase block mb-1">Total Sesi Dikerjakan</span>
+                            <span class="text-3xl font-extrabold text-[#102A56]">${riwayat.length} <span class="text-sm font-normal text-slate-500">sesi</span></span>
+                        </div>
+                        <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs">
+                            <span class="text-xs text-slate-400 font-bold uppercase block mb-1">Skor Rata-Rata</span>
+                            <span class="text-3xl font-extrabold text-[#00B4B4]">
+                                ${riwayat.length > 0 ? Math.round(riwayat.reduce((a, b) => a + (b.skor / b.total * 100), 0) / riwayat.length) : 0}%
+                            </span>
+                        </div>
+                        <div class="bg-[#FFFFFF] p-5 rounded-2xl border border-slate-200 shadow-xs">
+                            <span class="text-xs text-slate-400 font-bold uppercase block mb-1">Status Kesiapan TKA</span>
+                            <span class="text-lg font-extrabold text-[#102A56]">${riwayat.length >= 2 ? 'Sangat Progresif' : 'Perlu Perbanyak Latihan'}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#FFFFFF] p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+                        <h3 class="font-extrabold text-lg text-[#102A56]">Riwayat Pengerjaan Sesi Soal</h3>
+            `;
+
+            if (riwayat.length === 0) {
+                html += `
+                    <div class="text-center py-12 text-slate-400 space-y-2">
+                        <i class="fa-solid fa-folder-open text-4xl"></i>
+                        <p class="text-sm font-medium">Belum ada riwayat skor. Pilih jenis TKA di Home lalu selesaikan sesi latihan soal!</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-slate-400 uppercase text-xs">
+                                    <th class="py-3 px-4">Waktu</th>
+                                    <th class="py-3 px-4">Sesi / Topik</th>
+                                    <th class="py-3 px-4">Skor</th>
+                                    <th class="py-3 px-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-semibold text-slate-700">
+                `;
+                riwayat.forEach(item => {
+                    const persentase = (item.skor / item.total) * 100;
+                    let badgeColor = persentase >= 75 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+                    let statusText = persentase >= 75 ? 'Sangat Baik' : 'Perlu Reviu';
+                    
+                    html += `
+                        <tr>
+                            <td class="py-3.5 px-4 text-xs text-slate-500 font-normal">${item.tanggal}</td>
+                            <td class="py-3.5 px-4 text-[#102A56]">${item.bab}</td>
+                            <td class="py-3.5 px-4">${item.skor} dari ${item.total} (${Math.round(persentase)}%)</td>
+                            <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-full text-xs border ${badgeColor}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+                html += `</tbody></table></div>`;
+            }
+
+            html += `</div></div>`;
+            document.getElementById('content-area-wrapper').innerHTML = html;
+        }
+
+        function selectBab(indexBab) {
+            currentBabIndex = indexBab;
+            renderBabMenu();
+        }
+
+        function renderBabMenu() {
+            const bab = databaseTKA[currentKategori].babList[currentBabIndex];
+
+            let html = `
+                <div class="space-y-6 max-w-5xl mx-auto">
+                    <button onclick="renderContent()" class="text-[#00B4B4] font-bold text-sm flex items-center hover:underline">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Daftar Materi ${databaseTKA[currentKategori].title}
+                    </button>
+
+                    <div class="bg-[#FFFFFF] p-6 rounded-3xl border border-slate-200 shadow-xs">
+                        <h2 class="text-2xl font-extrabold text-[#102A56] mb-1">${bab.namaBab}</h2>
+                        <p class="text-slate-500 text-sm mb-6">${bab.deskripsi}</p>
+
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="switchSubMenu('materi')" id="sub-btn-materi" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition bg-[#102A56] text-[#FFFFFF] shadow-md">Materi Konsep TKA</button>
+                            <button onclick="switchSubMenu('latihan')" id="sub-btn-latihan" class="px-5 py-2.5 rounded-2xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">Sesi Latihan Soal</button>
+                        </div>
+                    </div>
+
+                    <div id="sub-content-container"></div>
+                </div>
+            `;
+
+            document.getElementById('content-area-wrapper').innerHTML = html;
+            switchSubMenu('materi'); 
+        }
+
+        function switchSubMenu(menuType) {
+            const bab = databaseTKA[currentKategori].babList[currentBabIndex];
+
+            ['materi', 'latihan'].forEach(m => {
+                const btn = document.getElementById(`sub-btn-${m}`);
+                if(btn) {
+                    if(m === menuType) {
+                        btn.className = "px-5 py-2.5 rounded-2xl font-bold text-sm transition bg-[#102A56] text-[#FFFFFF] shadow-md";
+                    } else {
+                        btn.className = "px-5 py-2.5 rounded-2xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                    }
+                }
+            });
+
+            let subHtml = "";
+            if (menuType === 'materi') {
+                subHtml = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                bab.materiList.forEach(m => {
+                    subHtml += `
+                        <div class="bg-[#FFFFFF] p-6 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 font-semibold">${m.durasi}</span>
+                                <h3 class="text-lg font-extrabold text-[#102A56] mt-1 mb-2">${m.judul}</h3>
+                                <p class="text-sm text-slate-500 mb-4">${m.desc}</p>
+                            </div>
+                            <button onclick="alert('Membuka modul konsep TKA: ${m.judul}')" class="bg-teal-50 hover:bg-[#00B4B4] hover:text-[#FFFFFF] text-[#00B4B4] font-bold px-4 py-2.5 rounded-xl text-sm transition">Pelajari Modul</button>
+                        </div>
+                    `;
+                });
+                subHtml += `</div>`;
+            } else if (menuType === 'latihan') {
+                subHtml = `<div class="space-y-4">
+                    <div class="bg-[#FFFFFF] p-6 rounded-3xl border border-slate-200 shadow-xs">
+                        <h3 class="font-extrabold text-lg text-[#102A56] mb-2">Pilih Sesi Latihan Soal</h3>
+                        <p class="text-sm text-slate-500 mb-4">Latihan dipecah menjadi beberapa sesi agar materi teruji secara bertahap.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">`;
+                
+                bab.sesiLatihan.forEach((sesi, idx) => {
+                    subHtml += `
+                        <button onclick="bukaSesiSoal(${idx})" class="p-4 rounded-2xl border border-slate-200 hover:border-[#00B4B4] bg-slate-50 hover:bg-teal-50/50 text-left transition flex flex-col justify-between">
+                            <div>
+                                <span class="text-[10px] font-extrabold bg-[#00B4B4] text-[#FFFFFF] px-2 py-0.5 rounded-md">Sesi ${idx + 1}</span>
+                                <h4 class="font-extrabold text-sm text-[#102A56] mt-2 mb-1">${sesi.namaSesi}</h4>
+                            </div>
+                            <span class="text-xs font-bold text-[#00B4B4] mt-3">Mulai Mengerjakan <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </button>
+                    `;
+                });
+
+                subHtml += `</div></div><div id="active-sesi-container"></div></div>`;
+            }
+
+            document.getElementById('sub-content-container').innerHTML = subHtml;
+        }
+
+        function bukaSesiSoal(sesiIndex) {
+            const bab = databaseTKA[currentKategori].babList[currentBabIndex];
+            const sesi = bab.sesiLatihan[sesiIndex];
+
+            let sesiHtml = `
+                <div class="bg-[#FFFFFF] p-8 rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto space-y-4 mt-6">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold bg-teal-50 text-[#00B4B4] px-3 py-1 rounded-full">${sesi.namaSesi}</span>
+                        <span class="text-xs text-slate-400 font-semibold">${bab.namaBab}</span>
+                    </div>
+                    <h3 class="text-base font-bold text-[#102A56]">${sesi.soal}</h3>
+                    <div class="space-y-2">
+                        ${sesi.opsi.map((opt, i) => `
+                            <button onclick="jawabSesi(${i}, ${sesi.jawabanBenar}, '${bab.namaBab} - ${sesi.namaSesi}')" class="sesi-opt-btn w-full text-left p-3.5 rounded-2xl border border-slate-200 hover:bg-teal-50 font-semibold text-sm transition">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <p id="sesi-feedback" class="text-sm font-bold mt-2 text-center"></p>
+                </div>
+            `;
+
+            document.getElementById('active-sesi-container').innerHTML = sesiHtml;
+        }
+
+        function jawabSesi(selectedIndex, correctIndex, namaSesiLengkap) {
+            const buttons = document.querySelectorAll('.sesi-opt-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById('sesi-feedback');
+            let skorDidapat = 0;
+
+            if (selectedIndex === correctIndex) {
+                buttons[selectedIndex].className = "w-full text-left p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50 font-bold text-emerald-700 transition";
+                feedback.innerHTML = "Jawaban Benar! Skor dicatat ke Progres Belajarmu.";
+                feedback.className = "text-sm font-bold mt-2 text-center text-emerald-600";
+                skorDidapat = 100;
+            } else {
+                buttons[selectedIndex].className = "w-full text-left p-3.5 rounded-2xl border border-red-300 bg-red-50 font-bold text-red-700 transition";
+                buttons[correctIndex].className = "w-full text-left p-3.5 rounded-2xl border border-emerald-300 bg-emerald-50 font-bold text-emerald-700 transition";
+                feedback.innerHTML = "Kurang tepat. Jawaban yang benar ditandai hijau.";
+                feedback.className = "text-sm font-bold mt-2 text-center text-red-600";
+                skorDidapat = 0;
+            }
+
+            simpanSkorKeRiwayat(namaSesiLengkap, skorDidapat, 100);
+        }
+
+        window.onload = function() {
+            checkAuthStatus();
+        };
+    </script>
+</body>
+</html>
